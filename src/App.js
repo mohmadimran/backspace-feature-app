@@ -1,25 +1,87 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useEffect, useState } from "react";
 
-function App() {
+export default function App() {
+  const [text, setText] = useState("");
+
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+  const handleLetterClick = (letter) => {
+    setText((prev) => prev + letter);
+  };
+
+  const handleBackspace = () => {
+    setText((prev) => prev.slice(0, -1));
+  };
+
+  const handleKeyDown = (e) => {
+    const key = e.key.toUpperCase();
+
+    if (alphabet.includes(key)) {
+      setText((prev) => prev + key);
+    }
+
+    if (e.key === "Backspace") {
+      handleBackspace();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
+      <h1>Alphabet Builder</h1>
+
+      <div
+        style={{
+          minHeight: "50px",
+          border: "1px solid black",
+          margin: "20px auto",
+          width: "400px",
+          padding: "10px",
+          fontSize: "24px"
+        }}
+      >
+        {text}
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 60px)",
+          justifyContent: "center",
+          gap: "10px"
+        }}
+      >
+        {alphabet.map((letter) => (
+          <button
+            key={letter}
+            onClick={() => handleLetterClick(letter)}
+            style={{ padding: "10px", fontSize: "18px" }}
+          >
+            {letter}
+          </button>
+        ))}
+
+        <button
+          onClick={handleBackspace}
+          style={{
+            gridColumn: "span 7",
+            padding: "10px",
+            fontSize: "18px",
+            background: "#ff4d4d",
+            color: "white"
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          Backspace
+        </button>
+      </div>
     </div>
   );
 }
-
-export default App;
