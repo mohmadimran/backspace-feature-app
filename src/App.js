@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 export default function App() {
   const [text, setText] = useState("");
@@ -10,21 +10,24 @@ export default function App() {
     setText((prev) => prev + letter);
   };
 
-  const handleBackspace = () => {
+  const handleBackspace = useCallback(() => {
     setText((prev) => prev.slice(0, -1));
-  };
+  }, []);
 
-  const handleKeyDown = (e) => {
-    const key = e.key.toUpperCase();
+  const handleKeyDown = useCallback(
+    (e) => {
+      const key = e.key.toUpperCase();
 
-    if (alphabet.includes(key)) {
-      setText((prev) => prev + key);
-    }
+      if (alphabet.includes(key)) {
+        setText((prev) => prev + key);
+      }
 
-    if (e.key === "Backspace") {
-      handleBackspace();
-    }
-  };
+      if (e.key === "Backspace") {
+        handleBackspace();
+      }
+    },
+    [alphabet, handleBackspace]
+  );
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -32,7 +35,7 @@ export default function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleKeyDown]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "40px" }}>
