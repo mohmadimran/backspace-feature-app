@@ -1,72 +1,34 @@
-// src/App.js
-import React, { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 
-export default function App() {
+const App = () => {
   const [text, setText] = useState("");
 
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-  const handleLetterClick = (letter) => {
-    setText((prev) => prev + letter);
+  const handleBackspace = () => {
+    setText((prev) => prev.slice(0, -1));
   };
 
-  const handleBackspace = useCallback(() => {
-    setText((prev) => prev.slice(0, -1));
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (e) => {
-      const key = e.key.toUpperCase();
-
-      if (alphabet.includes(key)) {
-        setText((prev) => prev + key);
-      }
-
-      if (e.key === "Backspace") {
-        handleBackspace();
-      }
-    },
-    [alphabet, handleBackspace]
-  );
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleKeyDown]);
-
   return (
+   <>
     <div style={{ textAlign: "center", marginTop: "40px" }}>
-      <h1>Alphabet Builder</h1>
+      <h1>Alphabet Buttons</h1>
+      <p>Click letters</p>
 
-      <div
-        style={{
-          minHeight: "50px",
-          border: "1px solid black",
-          margin: "20px auto",
-          width: "400px",
-          padding: "10px",
-          fontSize: "24px"
-        }}
-      >
+      <div style={{ marginBottom: "20px", fontSize: "24px" }} className="output">
         {text}
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(7, 60px)",
-          justifyContent: "center",
-          gap: "10px"
-        }}
-      >
-        {alphabet.map((letter) => (
+      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
+        {alphabets.map((letter) => (
           <button
             key={letter}
-            onClick={() => handleLetterClick(letter)}
-            style={{ padding: "10px", fontSize: "18px" }}
+            onClick={() => setText((t) => t + letter)}
+            style={{
+              padding: "10px 14px",
+              fontSize: "18px",
+              cursor: "pointer",
+            }}
           >
             {letter}
           </button>
@@ -75,16 +37,18 @@ export default function App() {
         <button
           onClick={handleBackspace}
           style={{
-            gridColumn: "span 7",
-            padding: "10px",
+            padding: "10px 14px",
             fontSize: "18px",
-            background: "#ff4d4d",
-            color: "white"
+            cursor: "pointer",
+            backgroundColor: "#f88",
           }}
         >
           Backspace
         </button>
       </div>
     </div>
+   </>
   );
-}
+};
+
+export default App;
